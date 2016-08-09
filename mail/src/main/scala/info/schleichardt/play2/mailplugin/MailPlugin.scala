@@ -134,8 +134,12 @@ object MailPlugin {
 case class MailConfiguration(host: String, port: Int, useSsl: Boolean, user: Option[String], password: Option[String]) {
   def setup(email: Email): Email = {
     email.setHostName(host)
-    email.setSmtpPort(port)
     email.setSSLOnConnect(useSsl)
+    if (useSsl) {
+      email.setSslSmtpPort(port.toString)
+    } else {
+      email.setSmtpPort(port)
+    }
     email.setAuthentication(user.getOrElse(""), password.getOrElse(""))
     email
   }
